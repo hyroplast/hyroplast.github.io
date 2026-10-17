@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <meta
+    name="description"
+    content="Hyro Plast manufactures stretch film and PET/PP strapping solutions for industrial packaging."
+  >
+  <meta name="theme-color" content="#0B1112">
+  <meta name="application-name" content="Hyro Plast">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Hyro Plast">
+
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+
+  <title>Hyro Plast | Industrial Packaging</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --brand-gold: #E3AD4D;
+      --brand-background: #0B1112;
+      --brand-text: #F5F2E9;
+      --brand-muted: #91A09E;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: var(--brand-background);
+    }
+
+    #hyro-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+      color: var(--brand-text);
+      background:
+        radial-gradient(
+          ellipse at 50% 43%,
+          rgba(227, 173, 77, 0.12),
+          transparent 42%
+        ),
+        var(--brand-background);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      opacity: 1;
+      visibility: visible;
+      transition:
+        opacity 0.55s ease,
+        visibility 0.55s ease;
+    }
+
+    #hyro-loader.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .hyro-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      animation: logo-appear 0.8s ease both;
+    }
+
+    .hyro-logo {
+      display: block;
+      width: min(150px, 38vw);
+      max-height: 125px;
+      object-fit: contain;
+    }
+
+    .hyro-wordmark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-size: clamp(25px, 5vw, 34px);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+    }
+
+    .hyro-wordmark span {
+      color: var(--brand-text);
+    }
+
+    .hyro-wordmark strong {
+      color: var(--brand-gold);
+    }
+
+    .hyro-tagline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: min(560px, 90vw);
+      margin-top: 34px;
+      animation: text-appear 0.9s ease 0.2s both;
+    }
+
+    .hyro-tagline p {
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .tagline-heading {
+      color: var(--brand-gold);
+      font-size: clamp(15px, 3vw, 20px);
+      font-weight: 800;
+      letter-spacing: 0.07em;
+    }
+
+    .tagline-fa {
+      color: var(--brand-text);
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: clamp(18px, 3.5vw, 22px);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    
+
+    .loading-indicator {
+      position: relative;
+      width: min(220px, 70vw);
+      height: 4px;
+      margin-top: 34px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      animation: text-appear 0.9s ease 0.4s both;
+    }
+
+    .loading-indicator span {
+      position: absolute;
+      top: 0;
+      left: -38%;
+      display: block;
+      width: 38%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--brand-gold),
+        #FFF0C7
+      );
+      box-shadow: 0 0 12px rgba(227, 173, 77, 0.35);
+      animation: loading-sweep 1.5s ease-in-out infinite;
+    }
+
+    .hyro-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 22px;
+      color: var(--brand-muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      animation: text-appear 0.9s ease 0.5s both;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--brand-gold);
+      box-shadow: 0 0 10px rgba(227, 173, 77, 0.6);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    #hyro-loader-retry {
+      margin-top: 18px;
+      padding: 10px 18px;
+      color: var(--brand-text);
+      border: 1px solid rgba(227, 173, 77, 0.5);
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    #hyro-loader-retry[hidden] {
+      display: none;
+    }
+
+    @keyframes logo-appear {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes text-appear {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes loading-sweep {
+      from {
+        left: -38%;
+      }
+
+      to {
+        left: 100%;
+      }
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #hyro-loader {
+        padding: 20px;
+      }
+
+      .hyro-logo {
+        width: min(125px, 35vw);
+        max-height: 105px;
+      }
+
+      .hyro-brand {
+        gap: 15px;
+      }
+
+      .hyro-tagline {
+        margin-top: 30px;
+        gap: 9px;
+      }
+
+      .loading-indicator {
+        margin-top: 28px;
+      }
+
+      .hyro-status {
+        margin-top: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hyro-brand,
+      .hyro-tagline,
+      .loading-indicator,
+      .loading-indicator span,
+      .hyro-status,
+      .status-dot {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+
+
+
+<body>
+  <div
+    id="hyro-loader"
+    role="status"
+    aria-label="Loading Hyro Plast"
+  >
+    <div class="hyro-brand">
+      <img
+        class="hyro-logo"
+        src="images/hyro_plast_logo.png"
+        alt="Hyro Plast logo"
+      >
+
+      <div class="hyro-wordmark">
+        <span>HYRO</span>
+        <strong>PLAST</strong>
+      </div>
+    </div>
+
+    <div class="hyro-tagline">
+      <p class="tagline-heading">
+        PROTECTION IN EVERY LAYER.
+      </p>
+
+      <p class="tagline-fa" lang="fa" dir="rtl">
+        محافظت در هر لایه
+      </p>
+
+    
+    </div>
+
+    <div class="loading-indicator" aria-hidden="true">
+      <span></span>
+    </div>
+
+    <div class="hyro-status">
+      <span class="status-dot"></span>
+      <span id="hyro-loader-status">
+        Preparing your experience...
+      </span>
+    </div>
+
+    <button
+      id="hyro-loader-retry"
+      type="button"
+      hidden
+      onclick="window.location.reload()"
+    >
+      Reload application
+    </button>
+  </div>
+
+
+
+
+<!-- Capture PWA install prompt event -->
+<script>
+  let deferredPrompt = null;
+
+  // Capture the browser's native installation event.
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+
+    // Notify Flutter when its callback is available.
+    if (typeof window.hasPrompt === 'function') {
+      window.hasPrompt();
+    }
+
+    console.log('[Hyro PWA] Install prompt captured');
+  });
+
+  // Required by the pwa_install Flutter package.
+  window.promptInstall = function () {
+    if (!deferredPrompt) {
+      console.warn('[Hyro PWA] No install prompt available');
+      return;
+    }
+
+    const promptEvent = deferredPrompt;
+    deferredPrompt = null;
+
+    promptEvent.prompt();
+  };
+
+  // Notify Flutter after installation.
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+
+    if (typeof window.appInstalled === 'function') {
+      window.appInstalled();
+    }
+
+    console.log('[Hyro PWA] App installed');
+  });
+
+  // Explicitly expose this function on window.
+  window.getLaunchMode = function () {
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches;
+
+    if (
+      deferredPrompt &&
+      typeof window.hasPrompt === 'function'
+    ) {
+      window.hasPrompt();
+    }
+
+    if (document.referrer.startsWith('android-app://')) {
+      if (typeof window.appLaunchedAsTWA === 'function') {
+        window.appLaunchedAsTWA();
+      }
+    } else if (navigator.standalone || isStandalone) {
+      if (typeof window.appLaunchedAsPWA === 'function') {
+        window.appLaunchedAsPWA();
+      }
+    } else {
+      if (typeof window.appLaunchedInBrowser === 'function') {
+        window.appLaunchedInBrowser();
+      }
+    }
+  };
+
+  console.log(
+    '[Hyro PWA] getLaunchMode:',
+    typeof window.getLaunchMode
+  );
+</script>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
